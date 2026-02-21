@@ -1,27 +1,38 @@
 pipeline {
+    
     agent any
 
-    triggers {
-        githubPush()
-    }
-
     stages {
-
         stage('Restore dependencies') {
+            when {
+                expression {
+                    return env.GIT_BRANCH == 'origin/main'
+                }
+            }
             steps {
-                sh 'dotnet restore Homies.sln'
+                bat 'dotnet restore'
             }
         }
 
-        stage('Build the application') {
+        stage('Build the project') {
+            when {
+                expression {
+                    return env.GIT_BRANCH == 'origin/main'
+                }
+            }
             steps {
-                sh 'dotnet build Homies.sln --no-restore'
+                bat 'dotnet build --no-restore'
             }
         }
 
-        stage('Run the tests') {
+        stage('Run the required tests') {
+            when {
+                expression {
+                    return env.GIT_BRANCH == 'origin/main'
+                }
+            }
             steps {
-                sh 'dotnet test Homies.sln --no-build --verbosity normal'
+                bat 'dotnet test --no-build --no-restore'
             }
         }
     }
