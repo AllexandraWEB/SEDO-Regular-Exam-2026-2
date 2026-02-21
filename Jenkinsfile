@@ -7,12 +7,6 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage('Restore dependencies') {
             steps {
                 sh 'dotnet restore Homies.sln'
